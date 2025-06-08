@@ -10,7 +10,6 @@ class OKRTracker {
         this.db = null;
         
         this.init();
-        this.addStyles();
     }
 
     async init() {
@@ -815,86 +814,86 @@ class OKRTracker {
     }
 
     // スタイルの追加
-    addStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-            .export-options,
-            .import-options {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-                margin: 20px 0;
-            }
-
-            .export-options button,
-            .import-options button,
-            .file-input-label {
-                padding: 12px 20px;
-                border: none;
-                border-radius: 6px;
-                background-color: #4a90e2;
-                color: white;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                font-size: 16px;
-                transition: all 0.2s;
-            }
-
-            .export-options button:hover,
-            .import-options button:hover,
-            .file-input-label:hover {
-                background-color: #357abd;
-                transform: translateY(-2px);
-            }
-
-            .file-input-label {
-                justify-content: center;
-            }
-
-            .modal-content {
-                max-width: 500px;
-                width: 90%;
-            }
-
-            .notification {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 25px;
-                border-radius: 6px;
-                color: white;
-                z-index: 1000;
-                animation: slideIn 0.3s ease-out;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
-
-            .notification.success {
-                background-color: #4caf50;
-            }
-
-            .notification.error {
-                background-color: #f44336;
-            }
-
-            .notification.info {
-                background-color: #2196f3;
-            }
-
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
+    // addStyles() {
+    //     const style = document.createElement('style');
+    //     style.textContent = `
+    //         .export-options,
+    //         .import-options {
+    //             display: flex;
+    //             flex-direction: column;
+    //             gap: 15px;
+    //             margin: 20px 0;
+    //         }
+    //
+    //         .export-options button,
+    //         .import-options button,
+    //         .file-input-label {
+    //             padding: 12px 20px;
+    //             border: none;
+    //             border-radius: 6px;
+    //             background-color: #4a90e2;
+    //             color: white;
+    //             cursor: pointer;
+    //             display: flex;
+    //             align-items: center;
+    //             gap: 10px;
+    //             font-size: 16px;
+    //             transition: all 0.2s;
+    //         }
+    //
+    //         .export-options button:hover,
+    //         .import-options button:hover,
+    //         .file-input-label:hover {
+    //             background-color: #357abd;
+    //             transform: translateY(-2px);
+    //         }
+    //
+    //         .file-input-label {
+    //             justify-content: center;
+    //         }
+    //
+    //         .modal-content {
+    //             max-width: 500px;
+    //             width: 90%;
+    //         }
+    //
+    //         .notification {
+    //             position: fixed;
+    //             top: 20px;
+    //             right: 20px;
+    //             padding: 15px 25px;
+    //             border-radius: 6px;
+    //             color: white;
+    //             z-index: 1000;
+    //             animation: slideIn 0.3s ease-out;
+    //             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    //         }
+    //
+    //         .notification.success {
+    //             background-color: #4caf50;
+    //         }
+    //
+    //         .notification.error {
+    //             background-color: #f44336;
+    //         }
+    //
+    //         .notification.info {
+    //             background-color: #2196f3;
+    //         }
+    //
+    //         @keyframes slideIn {
+    //             from {
+    //                 transform: translateX(100%);
+    //                 opacity: 0;
+    //             }
+    //             to {
+    //                 transform: translateX(0);
+    //                 opacity: 1;
+    //             }
+    //         }
+    //     `;
+    //     document.head.appendChild(style);
+    // }
 
     // 通知を表示する関数
     showNotification(message, type = 'info') {
