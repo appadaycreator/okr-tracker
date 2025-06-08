@@ -56,6 +56,11 @@ self.addEventListener('activate', (event) => {
 
 // フェッチイベント - キャッシュファーストストラテジー
 self.addEventListener('fetch', (event) => {
+  // chrome-extensionなど、http/https以外のリクエストは無視
+  if (!event.request.url.startsWith('http')) {
+    return;
+  }
+
   // Google Analytics やその他の外部リクエストはキャッシュしない
   if (event.request.url.includes('google-analytics.com') || 
       event.request.url.includes('googletagmanager.com') ||
