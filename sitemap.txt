@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- メインページ -->
+  <url>
+    <loc>https://appadaycreator.github.io/okr-tracker/</loc>
+    <lastmod>2025-06-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- インデックスページ（明示的） -->
+  <url>
+    <loc>https://appadaycreator.github.io/okr-tracker/index.html</loc>
+    <lastmod>2025-06-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- プライバシーポリシー -->
+  <url>
+    <loc>https://appadaycreator.github.io/okr-tracker/privacy.html</loc>
+    <lastmod>2025-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- 免責事項 -->
+  <url>
+    <loc>https://appadaycreator.github.io/okr-tracker/terms.html</loc>
+    <lastmod>2025-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- お問い合わせ -->
+  <url>
+    <loc>https://appadaycreator.github.io/okr-tracker/contact.html</loc>
+    <lastmod>2025-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- PWAマニフェスト -->
+  <url>
+    <loc>https://appadaycreator.github.io/okr-tracker/manifest.json</loc>
+    <lastmod>2025-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
+
+</urlset>

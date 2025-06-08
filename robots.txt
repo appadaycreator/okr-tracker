@@ -1,0 +1,70 @@
+# パーソナルOKRトラッカー robots.txt
+
+# 全てのクローラーに対する設定
+User-agent: *
+
+# 許可するページ
+Allow: /
+Allow: /index.html
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /app.js
+Allow: /assets/
+
+# 制限するページ（プライベートな情報を含むページ）
+Disallow: /privacy.html
+Disallow: /terms.html
+Disallow: /contact.html
+
+# 特定ファイルの制限
+Disallow: /.git/
+Disallow: /.github/
+Disallow: /node_modules/
+Disallow: /*.log
+Disallow: /*.tmp
+Disallow: /*.bak
+
+# GoogleBotに対する特別な設定
+User-agent: Googlebot
+Allow: /
+Allow: /index.html
+Allow: /manifest.json
+Allow: /assets/
+Disallow: /privacy.html
+Disallow: /terms.html
+Disallow: /contact.html
+
+# BingBotに対する設定
+User-agent: Bingbot
+Allow: /
+Allow: /index.html
+Allow: /manifest.json
+Allow: /assets/
+Disallow: /privacy.html
+Disallow: /terms.html
+Disallow: /contact.html
+
+# 悪意のあるボットをブロック
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# サイトマップの場所を指定
+Sitemap: https://appadaycreator.github.io/okr-tracker/sitemap.xml
+
+# クロール遅延（礼儀正しいクローリングのため）
+Crawl-delay: 1
+
+# リクエスト頻度制限（1秒間に1リクエスト）
+Request-rate: 1/1s
+
+# 訪問時間制限（午前9時から午後6時まで、JST）
+Visit-time: 0900-1800
