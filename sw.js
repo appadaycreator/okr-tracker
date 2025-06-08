@@ -59,8 +59,15 @@ self.addEventListener('activate', (event) => {
 
 // フェッチイベント - キャッシュファーストストラテジー
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
   // chrome-extensionなど、http/https以外のリクエストは無視
-  if (!event.request.url.startsWith('http')) {
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
+
+  // 同じオリジンのリクエストのみをキャッシュ
+  if (!url.origin.includes(location.origin)) {
     return;
   }
 
