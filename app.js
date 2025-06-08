@@ -10,6 +10,7 @@ class OKRTracker {
         this.db = null;
         
         this.init();
+        this.addStyles();
     }
 
     async init() {
@@ -717,218 +718,194 @@ class OKRTracker {
 
     // エクスポートオプション表示
     showExportOptions() {
-        const modal = document.getElementById('modal-content');
+        const modal = document.createElement('div');
+        modal.className = 'modal';
         modal.innerHTML = `
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">データエクスポート</h2>
-            
-            <div class="space-y-4 mb-6">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-3">エクスポート形式</h3>
-                    <div class="space-y-2">
-                        <label class="flex items-center space-x-3">
-                            <input type="radio" name="export-format" value="json" checked class="w-4 h-4 text-blue-600">
-                            <span class="text-gray-700">
-                                <strong>JSON形式</strong> - 完全なデータバックアップ（推奨）
-                            </span>
-                        </label>
-                        <label class="flex items-center space-x-3">
-                            <input type="radio" name="export-format" value="csv" class="w-4 h-4 text-blue-600">
-                            <span class="text-gray-700">
-                                <strong>CSV形式</strong> - スプレッドシートで開けるデータ
-                            </span>
+            <div class="modal-content">
+                <h2>データのエクスポート</h2>
+                <div class="export-options">
+                    <button class="export-json">
+                        <i class="fas fa-file-code"></i>
+                        JSON形式でエクスポート
+                    </button>
+                    <button class="export-csv">
+                        <i class="fas fa-file-csv"></i>
+                        CSV形式でエクスポート
+                    </button>
+                    <button class="export-backup">
+                        <i class="fas fa-save"></i>
+                        バックアップを作成
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button class="close-modal">閉じる</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        this.showModal();
+
+        // イベントリスナーの設定
+        modal.querySelector('.export-json').addEventListener('click', () => {
+            this.executeExport('json');
+            this.closeModal();
+        });
+
+        modal.querySelector('.export-csv').addEventListener('click', () => {
+            this.executeExport('csv');
+            this.closeModal();
+        });
+
+        modal.querySelector('.export-backup').addEventListener('click', () => {
+            this.createManualBackup();
+            this.closeModal();
+        });
+
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            this.closeModal();
+        });
+    }
+
+    showImportOptions() {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h2>データのインポート</h2>
+                <div class="import-options">
+                    <div class="file-import">
+                        <label class="file-input-label">
+                            <i class="fas fa-file-import"></i>
+                            ファイルからインポート
+                            <input type="file" accept=".json,.csv" style="display: none;">
                         </label>
                     </div>
+                    <div class="backup-restore">
+                        <button class="show-backups">
+                            <i class="fas fa-history"></i>
+                            バックアップから復元
+                        </button>
+                    </div>
                 </div>
-
-                <div class="bg-blue-50 rounded-lg p-4">
-                    <h4 class="font-semibold text-blue-800 mb-2">エクスポート内容</h4>
-                    <ul class="text-sm text-blue-700 space-y-1">
-                        <li>• OKR設定: ${this.okrs.length}個</li>
-                        <li>• 履歴データ: ${this.history.length}件</li>
-                        <li>• ユーザー設定とポイント</li>
-                        <li>• アプリケーション設定</li>
-                    </ul>
+                <div class="modal-footer">
+                    <button class="close-modal">閉じる</button>
                 </div>
-            </div>
-
-            <div class="flex justify-end space-x-3">
-                <button onclick="okrTracker.closeModal()" 
-                        class="px-4 py-2 text-gray-600 hover:text-gray-800">
-                    キャンセル
-                </button>
-                <button onclick="okrTracker.executeExport()" 
-                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                    エクスポート実行
-                </button>
             </div>
         `;
+
+        document.body.appendChild(modal);
+        this.showModal();
+
+        // イベントリスナーの設定
+        const fileInput = modal.querySelector('input[type="file"]');
+        fileInput.addEventListener('change', (e) => {
+            this.executeFileImport(e);
+            this.closeModal();
+        });
+
+        modal.querySelector('.show-backups').addEventListener('click', () => {
+            this.showBackupManager();
+            this.closeModal();
+        });
+
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            this.closeModal();
+        });
     }
 
-    // エクスポート実行
-    async executeExport() {
-        try {
-            const format = document.querySelector('input[name="export-format"]:checked').value;
-            const success = await this.exportData(format);
-            
-            if (success) {
-                this.closeModal();
-                alert('データのエクスポートが完了しました！');
+    // スタイルの追加
+    addStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .export-options,
+            .import-options {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                margin: 20px 0;
             }
-        } catch (error) {
-            console.error('Export execution failed:', error);
-            alert('エクスポートの実行に失敗しました');
-        }
-    }
 
-    // インポートオプション表示
-    showImportOptions() {
-        const modal = document.getElementById('modal-content');
-        modal.innerHTML = `
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">データインポート</h2>
-            
-            <div class="space-y-4 mb-6">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-3">ファイル選択</h3>
-                    <input type="file" id="import-file-input" accept=".json,.csv" 
-                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <p class="text-sm text-gray-600 mt-2">
-                        JSONファイル（完全復元）またはCSVファイル（データのみ）を選択してください
-                    </p>
-                </div>
+            .export-options button,
+            .import-options button,
+            .file-input-label {
+                padding: 12px 20px;
+                border: none;
+                border-radius: 6px;
+                background-color: #4a90e2;
+                color: white;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 16px;
+                transition: all 0.2s;
+            }
 
-                <div class="bg-yellow-50 rounded-lg p-4">
-                    <h4 class="font-semibold text-yellow-800 mb-2">⚠️ 注意事項</h4>
-                    <ul class="text-sm text-yellow-700 space-y-1">
-                        <li>• インポート前に現在のデータのバックアップを推奨します</li>
-                        <li>• 大きなファイルの処理には時間がかかる場合があります</li>
-                        <li>• 無効なデータ形式のファイルはインポートできません</li>
-                    </ul>
-                </div>
-            </div>
+            .export-options button:hover,
+            .import-options button:hover,
+            .file-input-label:hover {
+                background-color: #357abd;
+                transform: translateY(-2px);
+            }
 
-            <div class="flex justify-end space-x-3">
-                <button onclick="okrTracker.closeModal()" 
-                        class="px-4 py-2 text-gray-600 hover:text-gray-800">
-                    キャンセル
-                </button>
-                <button onclick="okrTracker.executeFileImport()" 
-                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                    インポート開始
-                </button>
-            </div>
+            .file-input-label {
+                justify-content: center;
+            }
+
+            .modal-content {
+                max-width: 500px;
+                width: 90%;
+            }
+
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 6px;
+                color: white;
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .notification.success {
+                background-color: #4caf50;
+            }
+
+            .notification.error {
+                background-color: #f44336;
+            }
+
+            .notification.info {
+                background-color: #2196f3;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
         `;
+        document.head.appendChild(style);
     }
 
-    // ファイルインポート実行
-    async executeFileImport() {
-        try {
-            const fileInput = document.getElementById('import-file-input');
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                alert('ファイルを選択してください');
-                return;
-            }
+    // 通知を表示する関数
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
 
-            const success = await this.importData(file);
-            if (success) {
-                this.closeModal();
-            }
-        } catch (error) {
-            console.error('File import execution failed:', error);
-            alert('ファイルインポートの実行に失敗しました');
-        }
-    }
-
-    // イベントリスナー設定
-    setupEventListeners() {
-        // ナビゲーション
-        const navDashboard = document.getElementById('nav-dashboard');
-        if (navDashboard) navDashboard.addEventListener('click', () => this.showView('dashboard'));
-        const navOkrs = document.getElementById('nav-okrs');
-        if (navOkrs) navOkrs.addEventListener('click', () => this.showView('okr'));
-        const navProgress = document.getElementById('nav-progress');
-        if (navProgress) navProgress.addEventListener('click', () => this.showView('progress'));
-        const navReports = document.getElementById('nav-reports');
-        if (navReports) navReports.addEventListener('click', () => this.showView('reports'));
-        const navCompare = document.getElementById('nav-compare');
-        if (navCompare) navCompare.addEventListener('click', () => this.showView('compare'));
-
-        // ボタンアクション
-        const startOkrBtn = document.getElementById('start-okr-btn');
-        if (startOkrBtn) startOkrBtn.addEventListener('click', () => this.showView('okr'));
-        const addOkrBtn = document.getElementById('add-okr-btn');
-        if (addOkrBtn) addOkrBtn.addEventListener('click', () => this.showAddOKRModal());
-        const shareBtn = document.getElementById('share-btn');
-        if (shareBtn) shareBtn.addEventListener('click', () => this.shareResults());
-        const backupBtn = document.getElementById('backup-btn');
-        if (backupBtn) backupBtn.addEventListener('click', () => this.showBackupManager());
-        
-        // ナビゲーション（バックアップ追加）
-        const navBackup = document.getElementById('nav-backup');
-        if (navBackup) {
-            navBackup.addEventListener('click', () => this.showBackupManager());
-        }
-
-        // 比較機能
-        const generateShareCode = document.getElementById('generate-share-code');
-        if (generateShareCode) generateShareCode.addEventListener('click', () => this.generateShareCode());
-        const importFriendData = document.getElementById('import-friend-data');
-        if (importFriendData) importFriendData.addEventListener('click', () => this.importFriendData());
-        const copyShareCode = document.getElementById('copy-share-code');
-        if (copyShareCode) copyShareCode.addEventListener('click', () => this.copyShareCode());
-
-        // モーダル
-        const modalOverlay = document.getElementById('modal-overlay');
-        if (modalOverlay) {
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) {
-                    this.closeModal();
-                }
-            });
-        }
-
-        // キーボードショートカット
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                switch (e.key) {
-                    case 's':
-                        e.preventDefault();
-                        this.createManualBackup();
-                        break;
-                    case 'e':
-                        e.preventDefault();
-                        this.showExportOptions();
-                        break;
-                    case 'i':
-                        e.preventDefault();
-                        this.showImportOptions();
-                        break;
-                }
-            }
-        });
-
-        // アフィリエイトリンク設定
-        this.setupAffiliateLinks();
-    }
-
-    // アフィリエイトリンク設定
-    setupAffiliateLinks() {
-        // Amazon Associates
-        const amazonLinks = {
-            'affiliate-book-1': 'https://amzn.to/OKR-book-1', // 実際のアフィリエイトリンクに置き換え
-            'affiliate-book-2': 'https://amzn.to/high-output-management',
-            'affiliate-book-3': 'https://amzn.to/goal-achievement-tech'
-        };
-
-        Object.entries(amazonLinks).forEach(([id, url]) => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.href = url;
-                element.target = '_blank';
-                element.rel = 'noopener noreferrer';
-            }
-        });
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
     }
 
     // ビュー管理
@@ -2206,6 +2183,75 @@ https://appadaycreator.github.io/okr-tracker/`;
 
     updateProgress(okrId) {
         this.showView('progress');
+    }
+
+    setupEventListeners() {
+        // ナビゲーション
+        const navDashboard = document.getElementById('nav-dashboard');
+        if (navDashboard) navDashboard.addEventListener('click', () => this.showView('dashboard'));
+        const navOkrs = document.getElementById('nav-okrs');
+        if (navOkrs) navOkrs.addEventListener('click', () => this.showView('okr'));
+        const navProgress = document.getElementById('nav-progress');
+        if (navProgress) navProgress.addEventListener('click', () => this.showView('progress'));
+        const navReports = document.getElementById('nav-reports');
+        if (navReports) navReports.addEventListener('click', () => this.showView('reports'));
+        const navCompare = document.getElementById('nav-compare');
+        if (navCompare) navCompare.addEventListener('click', () => this.showView('compare'));
+
+        // ボタンアクション
+        const startOkrBtn = document.getElementById('start-okr-btn');
+        if (startOkrBtn) startOkrBtn.addEventListener('click', () => this.showView('okr'));
+        const addOkrBtn = document.getElementById('add-okr-btn');
+        if (addOkrBtn) addOkrBtn.addEventListener('click', () => this.showAddOKRModal());
+        const shareBtn = document.getElementById('share-btn');
+        if (shareBtn) shareBtn.addEventListener('click', () => this.shareResults());
+
+        // エクスポート/インポート
+        const exportBtn = document.getElementById('export-btn');
+        if (exportBtn) exportBtn.addEventListener('click', () => this.showExportOptions());
+        const importBtn = document.getElementById('import-btn');
+        if (importBtn) importBtn.addEventListener('click', () => this.showImportOptions());
+
+        // 比較機能
+        const generateShareCode = document.getElementById('generate-share-code');
+        if (generateShareCode) generateShareCode.addEventListener('click', () => this.generateShareCode());
+        const importFriendData = document.getElementById('import-friend-data');
+        if (importFriendData) importFriendData.addEventListener('click', () => this.importFriendData());
+        const copyShareCode = document.getElementById('copy-share-code');
+        if (copyShareCode) copyShareCode.addEventListener('click', () => this.copyShareCode());
+
+        // モーダル
+        const modalOverlay = document.getElementById('modal-overlay');
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    this.closeModal();
+                }
+            });
+        }
+
+        // キーボードショートカット
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 's':
+                        e.preventDefault();
+                        this.createManualBackup();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        this.showExportOptions();
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        this.showImportOptions();
+                        break;
+                }
+            }
+        });
+
+        // アフィリエイトリンク設定
+        this.setupAffiliateLinks();
     }
 }
 
