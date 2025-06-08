@@ -1,0 +1,79 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景グラデーション -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4f46e5;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- ドロップシャドウ -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="512" height="512" rx="80" ry="80" fill="url(#bgGradient)"/>
+  
+  <!-- メインチャート要素 -->
+  <g transform="translate(256,256)" filter="url(#shadow)">
+    <!-- 外側円弧（達成度表示） -->
+    <circle cx="0" cy="0" r="120" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="16"/>
+    <circle cx="0" cy="0" r="120" fill="none" stroke="url(#chartGradient)" stroke-width="16" 
+            stroke-dasharray="452" stroke-dashoffset="113" 
+            stroke-linecap="round" transform="rotate(-90)"/>
+    
+    <!-- 中央のターゲットアイコン -->
+    <circle cx="0" cy="0" r="60" fill="rgba(255,255,255,0.95)"/>
+    
+    <!-- OKRシンボル - 目標アイコン -->
+    <g transform="scale(0.8)">
+      <!-- 目標アイコン（ダーツボード風） -->
+      <circle cx="0" cy="0" r="35" fill="url(#bgGradient)"/>
+      <circle cx="0" cy="0" r="25" fill="rgba(255,255,255,0.9)"/>
+      <circle cx="0" cy="0" r="15" fill="url(#progressGradient)"/>
+      <circle cx="0" cy="0" r="8" fill="rgba(255,255,255,0.9)"/>
+      <circle cx="0" cy="0" r="4" fill="url(#bgGradient)"/>
+    </g>
+    
+    <!-- 進捗バー（上部） -->
+    <g transform="translate(0,-160)">
+      <rect x="-80" y="-8" width="160" height="16" rx="8" fill="rgba(255,255,255,0.3)"/>
+      <rect x="-80" y="-8" width="120" height="16" rx="8" fill="url(#progressGradient)"/>
+    </g>
+    
+    <!-- 進捗バー（右側） -->
+    <g transform="translate(140,0) rotate(90)">
+      <rect x="-60" y="-6" width="120" height="12" rx="6" fill="rgba(255,255,255,0.3)"/>
+      <rect x="-60" y="-6" width="90" height="12" rx="6" fill="url(#chartGradient)"/>
+    </g>
+    
+    <!-- 進捗バー（左側） -->
+    <g transform="translate(-140,0) rotate(90)">
+      <rect x="-60" y="-6" width="120" height="12" rx="6" fill="rgba(255,255,255,0.3)"/>
+      <rect x="-60" y="-6" width="72" height="12" rx="6" fill="url(#progressGradient)"/>
+    </g>
+  </g>
+  
+  <!-- 装飾的な要素 -->
+  <g opacity="0.6">
+    <!-- 左上の小さな円 -->
+    <circle cx="100" cy="100" r="12" fill="rgba(255,255,255,0.4)"/>
+    <!-- 右下の小さな円 -->
+    <circle cx="412" cy="412" r="8" fill="rgba(255,255,255,0.3)"/>
+    <!-- 右上の線 -->
+    <line x1="380" y1="80" x2="420" y2="120" stroke="rgba(255,255,255,0.4)" stroke-width="4" stroke-linecap="round"/>
+    <!-- 左下の線 -->
+    <line x1="80" y1="380" x2="120" y2="420" stroke="rgba(255,255,255,0.3)" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>
