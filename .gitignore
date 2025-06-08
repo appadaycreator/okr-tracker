@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+
+# ビルド出力
+dist/
+
+# 環境変数
+.env
+
+# macOS
+.DS_Store
+
+# ログ
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# その他
+*.local 

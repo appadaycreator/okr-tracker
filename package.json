@@ -1,5 +1,17 @@
 {
+  "name": "okr-tracker",
+  "version": "1.0.0",
+  "description": "個人や小規模チーム向けの無料OKR管理ツール",
+  "scripts": {
+    "build:css": "npx tailwindcss -i styles.css -o dist/styles.css --minify",
+    "watch:css": "npx tailwindcss -i styles.css -o dist/styles.css --watch"
+  },
   "dependencies": {
-    "sharp": "^0.34.2"
+    "sharp": "^0.33.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
   }
 }

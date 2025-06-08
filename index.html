@@ -27,6 +27,7 @@
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="OKRトラッカー">
@@ -47,21 +48,7 @@
     <!-- End Google Tag Manager -->
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#2563eb',
-                        secondary: '#10b981',
-                        accent: '#f59e0b',
-                        danger: '#ef4444'
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="styles.css" rel="stylesheet">
     
     <!-- Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
