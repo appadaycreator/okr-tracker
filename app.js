@@ -843,17 +843,26 @@ class OKRTracker {
     // イベントリスナー設定
     setupEventListeners() {
         // ナビゲーション
-        document.getElementById('nav-dashboard').addEventListener('click', () => this.showView('dashboard'));
-        document.getElementById('nav-okrs').addEventListener('click', () => this.showView('okr'));
-        document.getElementById('nav-progress').addEventListener('click', () => this.showView('progress'));
-        document.getElementById('nav-reports').addEventListener('click', () => this.showView('reports'));
-        document.getElementById('nav-compare').addEventListener('click', () => this.showView('compare'));
+        const navDashboard = document.getElementById('nav-dashboard');
+        if (navDashboard) navDashboard.addEventListener('click', () => this.showView('dashboard'));
+        const navOkrs = document.getElementById('nav-okrs');
+        if (navOkrs) navOkrs.addEventListener('click', () => this.showView('okr'));
+        const navProgress = document.getElementById('nav-progress');
+        if (navProgress) navProgress.addEventListener('click', () => this.showView('progress'));
+        const navReports = document.getElementById('nav-reports');
+        if (navReports) navReports.addEventListener('click', () => this.showView('reports'));
+        const navCompare = document.getElementById('nav-compare');
+        if (navCompare) navCompare.addEventListener('click', () => this.showView('compare'));
 
         // ボタンアクション
-        document.getElementById('start-okr-btn').addEventListener('click', () => this.showView('okr'));
-        document.getElementById('add-okr-btn').addEventListener('click', () => this.showAddOKRModal());
-        document.getElementById('share-btn').addEventListener('click', () => this.shareResults());
-        document.getElementById('backup-btn').addEventListener('click', () => this.showBackupManager());
+        const startOkrBtn = document.getElementById('start-okr-btn');
+        if (startOkrBtn) startOkrBtn.addEventListener('click', () => this.showView('okr'));
+        const addOkrBtn = document.getElementById('add-okr-btn');
+        if (addOkrBtn) addOkrBtn.addEventListener('click', () => this.showAddOKRModal());
+        const shareBtn = document.getElementById('share-btn');
+        if (shareBtn) shareBtn.addEventListener('click', () => this.shareResults());
+        const backupBtn = document.getElementById('backup-btn');
+        if (backupBtn) backupBtn.addEventListener('click', () => this.showBackupManager());
         
         // ナビゲーション（バックアップ追加）
         const navBackup = document.getElementById('nav-backup');
@@ -862,16 +871,22 @@ class OKRTracker {
         }
 
         // 比較機能
-        document.getElementById('generate-share-code').addEventListener('click', () => this.generateShareCode());
-        document.getElementById('import-friend-data').addEventListener('click', () => this.importFriendData());
-        document.getElementById('copy-share-code').addEventListener('click', () => this.copyShareCode());
+        const generateShareCode = document.getElementById('generate-share-code');
+        if (generateShareCode) generateShareCode.addEventListener('click', () => this.generateShareCode());
+        const importFriendData = document.getElementById('import-friend-data');
+        if (importFriendData) importFriendData.addEventListener('click', () => this.importFriendData());
+        const copyShareCode = document.getElementById('copy-share-code');
+        if (copyShareCode) copyShareCode.addEventListener('click', () => this.copyShareCode());
 
         // モーダル
-        document.getElementById('modal-overlay').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('modal-overlay')) {
-                this.closeModal();
-            }
-        });
+        const modalOverlay = document.getElementById('modal-overlay');
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    this.closeModal();
+                }
+            });
+        }
 
         // キーボードショートカット
         document.addEventListener('keydown', (e) => {
