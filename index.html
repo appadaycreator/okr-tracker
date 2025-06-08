@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パーソナルOKRトラッカー | 目標達成を可視化する無料ツール</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="個人や小規模チーム向けの無料OKR管理ツール。目標設定から進捗追跡まで、視覚的に分かりやすく管理できます。">
+    <meta name="keywords" content="OKR,目標管理,進捗管理,無料ツール,目標達成,生産性">
+    <meta name="author" content="App A Day Creator">
+    
+    <!-- OGP Meta Tags -->
+    <meta property="og:title" content="パーソナルOKRトラッカー | 目標達成を可視化する無料ツール">
+    <meta property="og:description" content="個人や小規模チーム向けの無料OKR管理ツール。目標設定から進捗追跡まで、視覚的に分かりやすく管理できます。">
+    <meta property="og:image" content="https://appadaycreator.github.io/okr-tracker/assets/ogp-image.png">
+    <meta property="og:url" content="https://appadaycreator.github.io/okr-tracker/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="パーソナルOKRトラッカー">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@appadaycreator">
+    <meta name="twitter:title" content="パーソナルOKRトラッカー | 目標達成を可視化する無料ツール">
+    <meta name="twitter:description" content="個人や小規模チーム向けの無料OKR管理ツール。目標設定から進捗追跡まで、視覚的に分かりやすく管理できます。">
+    <meta name="twitter:image" content="https://appadaycreator.github.io/okr-tracker/assets/ogp-image.png">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="OKRトラッカー">
+    <link rel="apple-touch-icon" href="assets/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TXQGZRF9');</script>
+    <!-- End Google Tag Manager -->
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#10b981',
+                        accent: '#f59e0b',
+                        danger: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .progress-ring { transition: stroke-dasharray 1s ease-in-out; }
+        .glass-effect { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">OKRトラッカー</h1>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <button id="nav-dashboard" class="nav-link text-blue-600 font-semibold">ダッシュボード</button>
+                    <button id="nav-okrs" class="nav-link text-gray-600 hover:text-blue-600">OKR管理</button>
+                    <button id="nav-progress" class="nav-link text-gray-600 hover:text-blue-600">進捗更新</button>
+                    <button id="nav-reports" class="nav-link text-gray-600 hover:text-blue-600">レポート</button>
+                    <button id="nav-compare" class="nav-link text-gray-600 hover:text-blue-600">友達と比較</button>
+                </nav>
+                <button id="share-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                    </svg>
+                    シェア
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="view">
+            <!-- Hero Section -->
+            <section class="text-center mb-12 fade-in">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">目標達成を可視化しよう</h2>
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    OKR（Objectives and Key Results）で明確な目標設定を行い、進捗を視覚的に追跡。
+                    継続的な成長を実現するパーソナル目標管理ツールです。
+                </p>
+                <button id="start-okr-btn" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105">
+                    OKRを始める
+                </button>
+            </section>
+
+            <!-- Stats Cards -->
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="bg-white rounded-xl p-6 shadow-sm card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">アクティブOKR</p>
+                            <p id="active-okrs" class="text-2xl font-bold text-gray-800">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">平均達成率</p>
+                            <p id="avg-progress" class="text-2xl font-bold text-gray-800">0%</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">連続更新日</p>
+                            <p id="streak-days" class="text-2xl font-bold text-gray-800">0日</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">獲得ポイント</p>
+                            <p id="total-points" class="text-2xl font-bold text-gray-800">0pt</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Current OKRs Overview -->
+            <section class="bg-white rounded-xl p-6 shadow-sm mb-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">現在のOKR</h3>
+                <div id="current-okrs-list" class="space-y-4">
+                    <div class="text-center py-12 text-gray-500">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <p class="text-lg">まだOKRが設定されていません</p>
+                        <p class="text-sm mt-2">「OKRを始める」ボタンから目標を設定しましょう</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Affiliate Section -->
+            <section class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-white mb-8">
+                <h3 class="text-xl font-bold mb-4">📚 OKR学習におすすめの書籍</h3>
+                <p class="mb-4">目標達成スキルを向上させる厳選書籍をご紹介</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <a href="#" class="bg-white bg-opacity-20 rounded-lg p-4 hover:bg-opacity-30 transition-all" id="affiliate-book-1">
+                        <p class="font-semibold">OKR（オーケーアール）</p>
+                        <p class="text-sm opacity-90">Googleの目標管理手法</p>
+                    </a>
+                    <a href="#" class="bg-white bg-opacity-20 rounded-lg p-4 hover:bg-opacity-30 transition-all" id="affiliate-book-2">
+                        <p class="font-semibold">HIGH OUTPUT MANAGEMENT</p>
+                        <p class="text-sm opacity-90">効果的な組織運営のバイブル</p>
+                    </a>
+                    <a href="#" class="bg-white bg-opacity-20 rounded-lg p-4 hover:bg-opacity-30 transition-all" id="affiliate-book-3">
+                        <p class="font-semibold">目標達成の技術</p>
+                        <p class="text-sm opacity-90">科学的アプローチで成果を出す</p>
+                    </a>
+                </div>
+            </section>
+        </div>
+
+        <!-- OKR Management View -->
+        <div id="okr-view" class="view hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800">OKR管理</h2>
+                    <button id="add-okr-btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        新しいOKRを追加
+                    </button>
+                </div>
+                
+                <div id="okr-list" class="space-y-6">
+                    <!-- OKRs will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Update View -->
+        <div id="progress-view" class="view hidden">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-800 mb-8">進捗更新</h2>
+                <div id="progress-update-content">
+                    <!-- Progress update content will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports View -->
+        <div id="reports-view" class="view hidden">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-800 mb-8">レポート・分析</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">進捗チャート</h3>
+                        <canvas id="progress-chart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">達成率分布</h3>
+                        <canvas id="achievement-chart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">履歴</h3>
+                    <div id="history-list" class="space-y-3">
+                        <!-- History items will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compare View -->
+        <div id="compare-view" class="view hidden">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-800 mb-8">友達と比較</h2>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm mb-8">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">比較データを共有</h3>
+                    <p class="text-gray-600 mb-4">あなたの成果データを友達と共有して、お互いのモチベーションを高めましょう。</p>
+                    
+                    <div class="flex gap-4">
+                        <button id="generate-share-code" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            共有コードを生成
+                        </button>
+                        <button id="import-friend-data" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            友達データを読み込み
+                        </button>
+                    </div>
+                    
+                    <div id="share-code-display" class="hidden mt-4 p-4 bg-gray-100 rounded-lg">
+                        <p class="text-sm text-gray-600 mb-2">この共有コードを友達に送ってください：</p>
+                        <code id="share-code" class="bg-white p-2 rounded border text-sm"></code>
+                        <button id="copy-share-code" class="ml-2 text-blue-600 hover:text-blue-800">
+                            <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="comparison-results" class="space-y-6">
+                    <!-- Comparison results will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <span class="font-bold text-gray-800">OKRトラッカー</span>
+                    </div>
+                    <p class="text-gray-600 text-sm">目標達成を可視化する無料ツール</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3">機能</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>OKR設定</li>
+                        <li>進捗追跡</li>
+                        <li>レポート分析</li>
+                        <li>友達と比較</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3">サポート</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="privacy.html" class="hover:text-blue-600">プライバシーポリシー</a></li>
+                        <li><a href="terms.html" class="hover:text-blue-600">免責事項</a></li>
+                        <li><a href="contact.html" class="hover:text-blue-600">お問い合わせ</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3">フォロー</h4>
+                    <div class="flex space-x-3">
+                        <a href="https://x.com/appadaycreator" class="text-gray-400 hover:text-blue-600" target="_blank">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 mt-8 pt-8 text-center text-sm text-gray-600">
+                <p>&copy; 2025 App A Day Creator. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals and Scripts -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div id="modal-content" class="bg-white rounded-xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <!-- Modal content will be inserted here -->
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    
+    <!-- PWA Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
