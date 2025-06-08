@@ -5,13 +5,16 @@ const urlsToCache = [
   '/index.html',
   '/app.js',
   '/manifest.json',
+  '/styles.css',
+  '/dist/styles.css',
   '/assets/icon-192x192.png',
   '/assets/icon-512x512.png',
   '/assets/favicon.ico',
+  '/assets/screenshot-desktop.png',
+  '/assets/screenshot-mobile.png',
   '/privacy.html',
   '/terms.html',
   '/contact.html',
-  'https://cdn.tailwindcss.com',
   'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js'
 ];
 
@@ -79,26 +82,37 @@ self.addEventListener('fetch', (event) => {
 
         // キャッシュになければネットワークから取得
         console.log('Service Worker: Fetching from network', event.request.url);
-        return fetch(event.request).then((response) => {
-          // レスポンスが有効でない場合はそのまま返す
-          if (!response || response.status !== 200 || response.type !== 'basic') {
+        return fetch(event.request)
+          .then((response) => {
+            // レスポンスが有効でない場合はそのまま返す
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // レスポンスをクローンしてキャッシュに保存
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                // キャッシュの保存に失敗してもエラーを出さない
+                cache.put(event.request, responseToCache)
+                  .catch(error => {
+                    console.log('Service Worker: Cache put failed', error);
+                  });
+              })
+              .catch(error => {
+                console.log('Service Worker: Cache open failed', error);
+              });
+
             return response;
-          }
-
-          // レスポンスをクローンしてキャッシュに保存
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-
-          return response;
-        }).catch(() => {
-          // ネットワークエラーの場合、オフラインページを返す
-          if (event.request.destination === 'document') {
-            return caches.match('/index.html');
-          }
-        });
+          })
+          .catch((error) => {
+            console.log('Service Worker: Fetch failed', error);
+            // ネットワークエラーの場合、オフラインページを返す
+            if (event.request.destination === 'document') {
+              return caches.match('/index.html');
+            }
+            return new Response('Network error', { status: 503 });
+          });
       })
   );
 });
