@@ -1,5 +1,11 @@
 // OKRトラッカー Service Worker
 const CACHE_NAME = 'okr-tracker-v1.0.0';
+const ALLOWED_ORIGINS = [
+  'https://appadaycreator.github.io',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000'
+];
+
 const urlsToCache = [
   '/',
   '/index.html',
@@ -66,8 +72,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 同じオリジンのリクエストのみをキャッシュ
-  if (!url.origin.includes(location.origin)) {
+  // 許可されたオリジンのリクエストのみをキャッシュ
+  const isAllowedOrigin = ALLOWED_ORIGINS.some(origin => url.origin.startsWith(origin));
+  if (!isAllowedOrigin) {
     return;
   }
 
