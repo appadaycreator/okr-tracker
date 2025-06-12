@@ -1852,15 +1852,15 @@ https://appadaycreator.github.io/okr-tracker/`;
         this.showModal();
     }
 
-    renderKeyResultInput(index) {
+    renderKeyResultInput(index, kr = {}) {
         return `
             <div class="border border-gray-200 rounded-lg p-4">
                 <div class="grid grid-cols-1 gap-3">
-                    <input type="text" name="kr-description-${index}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Key Result ${index + 1}の説明">
+                    <input type="text" name="kr-description-${index}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Key Result ${index + 1}の説明" value="${kr.description || ''}">
                     <div class="grid grid-cols-3 gap-2">
-                        <input type="number" name="kr-target-${index}" required min="1" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="目標値">
-                        <input type="text" name="kr-unit-${index}" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="単位">
-                        <input type="number" name="kr-current-${index}" min="0" value="0" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="現在値">
+                        <input type="number" name="kr-target-${index}" required min="1" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="目標値" value="${kr.target ?? ''}">
+                        <input type="text" name="kr-unit-${index}" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="単位" value="${kr.unit || ''}">
+                        <input type="number" name="kr-current-${index}" min="0" class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="現在値" value="${kr.current ?? 0}">
                     </div>
                 </div>
                 ${index >= 2 ? `<button type="button" onclick="this.parentElement.remove()" class="mt-2 text-red-600 hover:text-red-800 text-sm">削除</button>` : ''}
@@ -2166,8 +2166,101 @@ https://appadaycreator.github.io/okr-tracker/`;
 
     // OKR編集・削除
     editOKR(okrId) {
-        // 編集機能の実装（簡略化）
-        alert('編集機能は今後実装予定です');
+        const okr = this.okrs.find(o => o.id === okrId);
+        if (!okr) return;
+
+        const modal = document.getElementById('modal-content');
+        modal.innerHTML = `
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">OKRを編集</h2>
+            <form id="edit-okr-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Objective（目標）</label>
+                    <input type="text" id="objective" name="objective" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">説明（任意）</label>
+                    <textarea id="description" name="description" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">開始日</label>
+                        <input type="date" id="start-date" name="start-date" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">終了日</label>
+                        <input type="date" id="end-date" name="end-date" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Key Results</label>
+                    <div id="key-results-container" class="space-y-3"></div>
+                    <button type="button" id="add-kr-btn" class="mt-2 text-blue-600 hover:text-blue-800 text-sm">+ Key Resultを追加</button>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-6">
+                    <button type="button" onclick="okrTracker.closeModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">キャンセル</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">保存</button>
+                </div>
+            </form>
+        `;
+
+        // 初期値を設定
+        document.getElementById('objective').value = okr.objective;
+        document.getElementById('description').value = okr.description || '';
+        document.getElementById('start-date').value = okr.startDate;
+        document.getElementById('end-date').value = okr.endDate;
+
+        const container = document.getElementById('key-results-container');
+        container.innerHTML = okr.keyResults.map((kr, idx) => this.renderKeyResultInput(idx, kr)).join('');
+
+        document.getElementById('add-kr-btn').addEventListener('click', () => {
+            const count = container.children.length;
+            if (count < 5) {
+                container.insertAdjacentHTML('beforeend', this.renderKeyResultInput(count));
+            }
+        });
+
+        document.getElementById('edit-okr-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.updateOKR(okrId);
+        });
+
+        this.showModal();
+    }
+
+    updateOKR(okrId) {
+        const okr = this.okrs.find(o => o.id === okrId);
+        if (!okr) return;
+
+        const form = document.getElementById('edit-okr-form');
+        const formData = new FormData(form);
+
+        okr.objective = formData.get('objective');
+        okr.description = formData.get('description');
+        okr.startDate = formData.get('start-date');
+        okr.endDate = formData.get('end-date');
+
+        const keyResults = [];
+        let index = 0;
+        while (formData.get(`kr-description-${index}`)) {
+            keyResults.push({
+                description: formData.get(`kr-description-${index}`),
+                target: parseFloat(formData.get(`kr-target-${index}`)),
+                current: parseFloat(formData.get(`kr-current-${index}`) || 0),
+                unit: formData.get(`kr-unit-${index}`) || ''
+            });
+            index++;
+        }
+        okr.keyResults = keyResults;
+
+        this.addToHistory('OKR更新', `「${okr.objective}」を更新しました`);
+        this.saveData();
+        this.closeModal();
+        this.updateDashboard();
+        this.updateOKRView();
     }
 
     deleteOKR(okrId) {
