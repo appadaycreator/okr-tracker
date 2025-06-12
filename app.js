@@ -1283,11 +1283,6 @@ https://appadaycreator.github.io/okr-tracker/`;
         }
     }
 
-    // 基本的なプレースホルダー関数
-    editOKR(okrId) {
-        alert('編集機能は今後実装予定です');
-    }
-
     updateProgress(okrId) {
         this.showView('progress');
     }
