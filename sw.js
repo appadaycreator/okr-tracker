@@ -7,20 +7,20 @@ const ALLOWED_ORIGINS = [
 ];
 
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/app.js',
-  '/manifest.json',
-  '/styles.css',
-  '/dist/styles.css',
-  '/assets/icon-192x192.png',
-  '/assets/icon-512x512.png',
-  '/assets/favicon.ico',
-  '/assets/screenshot-desktop.png',
-  '/assets/screenshot-mobile.png',
-  '/privacy.html',
-  '/terms.html',
-  '/contact.html',
+  './',
+  './index.html',
+  './app.js',
+  './manifest.json',
+  './styles.css',
+  './dist/styles.css',
+  './assets/icon-192x192.png',
+  './assets/icon-512x512.png',
+  './assets/favicon.ico',
+  './assets/screenshot-desktop.png',
+  './assets/screenshot-mobile.png',
+  './privacy.html',
+  './terms.html',
+  './contact.html',
   'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js'
 ];
 
